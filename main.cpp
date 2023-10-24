@@ -7,7 +7,7 @@
 #define WIDTH 1280
 #define HEIGTH 960
 
-//testesasteasateast
+
 int main()
 {
     //*tela e view
