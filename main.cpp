@@ -14,7 +14,6 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGTH), "SFML!", sf::Style::Close | sf::Style::Titlebar);
     sf::View view(sf::Vector2f(0,0), sf::Vector2f(WIDTH, HEIGTH));
     window.setView(view);
-    // store a jpg file in a sfml
 
 
     while (window.isOpen())//! cada iteração aqui é um frame
