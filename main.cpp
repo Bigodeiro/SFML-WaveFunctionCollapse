@@ -7,6 +7,12 @@
 #define WIDTH 900
 #define HEIGTH 900
 #define GRIDSIZE 9
+#define CELLSIZE 9
+
+int random(int min, int max)
+{
+    return rand() % (max - min + 1) + min;
+}
 
 class cell 
 {
@@ -27,8 +33,9 @@ class cell
     {
         pos.x = 0;
         pos.y = 0;
+        nPossib = 16;
 
-        imgPath = "img/0.png";
+        imgPath = "img/16.png";
     };
 };
 
@@ -38,6 +45,7 @@ void drawGrid(sf::RenderWindow &window, cell grid[GRIDSIZE][GRIDSIZE])
     {
         for (int j = 0; j < GRIDSIZE; j++)
         {
+            //display img
             sf::Sprite sprite;
             sf::Texture texture;
             texture.loadFromFile(grid[i][j].imgPath);
@@ -45,33 +53,71 @@ void drawGrid(sf::RenderWindow &window, cell grid[GRIDSIZE][GRIDSIZE])
             sprite.setPosition(grid[i][j].pos);
 
             window.draw(sprite);
+
+            //print npossib of each cell
+
+            //std::cout << std::setw(2) << grid[i][j].nPossib << " ";
+        }
+        //std::cout << std::endl;
+    }
+    //std::cout << std::endl;
+}
+
+int lowestNPossib (cell grid[GRIDSIZE][GRIDSIZE])
+{
+    int min = 16;
+
+    for (int i = 0; i < GRIDSIZE; i++)
+    {
+        for (int j = 0; j < GRIDSIZE; j++)
+        {
+            if (grid[i][j].nPossib < min && grid[i][j].nPossib != 0)
+            {
+                min = grid[i][j].nPossib;
+            }
         }
     }
+
+    return min;
+}
+
+sf::Vector2i randomCell (cell grid[GRIDSIZE][GRIDSIZE])
+{
+    sf::Vector2i pos;
+    int min = lowestNPossib(grid);
+    int n = 0;
+
+
+    //*Aleatoriza uma celula qualquer, mas se ela não for uma das com menor nPossib, ele aleatoriza de novo
+    while (n != min)
+    {
+        pos.x = random(0, GRIDSIZE - 1);
+        pos.y = random(0, GRIDSIZE - 1);
+
+        n = grid[pos.x][pos.y].nPossib;
+    }
+
+    return pos;
 }
 
 int main()
 {
     //*tela e view
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGTH), "SFML!", sf::Style::Close | sf::Style::Titlebar);
-    sf::View view(sf::Vector2f(GRIDSIZE * 9 / 2, GRIDSIZE * 9 / 2), sf::Vector2f(GRIDSIZE * 10, GRIDSIZE * 10));
+    sf::View view(sf::Vector2f(GRIDSIZE * CELLSIZE / 2, GRIDSIZE * CELLSIZE / 2), sf::Vector2f(GRIDSIZE * CELLSIZE + 100, GRIDSIZE * CELLSIZE + 100));
     window.setView(view);
 
-    //declare the map grid
     cell grid[GRIDSIZE][GRIDSIZE];
     for (int i = 0; i < GRIDSIZE; i++)
     {
         for (int j = 0; j < GRIDSIZE; j++)
         {
-            grid[i][j].pos.x = i * 9;//multiplique por 10 para separar as celulas
-            grid[i][j].pos.y = j * 9;
+            grid[i][j].pos.x = i * (CELLSIZE + 1);//? 0 é o espaçamento entre as celulas
+            grid[i][j].pos.y = j * (CELLSIZE + 1);
+
         }
     }
 
-    grid[0][0].imgPath = "img/2.png";
-    grid[1][0].imgPath = "img/9.png";
-    grid[2][0].imgPath = "img/9.png";
-    grid[3][0].imgPath = "img/9.png";
-    grid[4][0].imgPath = "img/4.png";
 
 
 
